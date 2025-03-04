@@ -53,12 +53,15 @@ for row in data_list[2:50]:
                test = test + new_item[y].item()
                averageValue[y] = averageValue[y] + new_item[y].item() 
             
-    if ((similarities[0][5] >= 0.6) and (similarities[6][4] >= 0.6)):
-        print("SIMILAR!! ---------")
-        similar_instances.append(similarities)
-        similar_instance_course_names.append(sentences[2])
-
-        num_similar += 1
+    if ((similarities[0][5] >= 0.6) or (similarities[6][4] >= 0.6)):
+        if sentences[2] not in similar_instance_course_names:
+            print("SIMILAR!! ---------")
+            similar_instances.append(similarities)
+            similar_instance_course_names.append(sentences[2])
+            num_similar += 1
+        else:
+            print("Duplicate course (Skipped)")
+    
     print("t", test)
     # f.write(similarities)
     # tensor([[1.0000, 0.6660, 0.1046],
@@ -100,7 +103,7 @@ similarities = model.similarity(embeddings, embeddings)
 print("Articulation", "High School Classes", "College Courses", "High School Course Description", "College Course Description")
 print("similarities: ", similarities)
 print("--------------------------------------------------------------------------------")
-print("Similar Courses: ")
+print("Similar College Courses: ")
 for i in similar_instance_course_names:
     print(i)
     print()
