@@ -21,6 +21,7 @@ f = open(filename, "a")
 test = 0
 count = [0,0,0,0,0]
 averageValue = [0, 0, 0, 0, 0]
+
 for row in data_list[2:50]:
     sentences = [
     row[0],
