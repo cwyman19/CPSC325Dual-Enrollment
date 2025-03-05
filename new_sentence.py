@@ -8,8 +8,6 @@ workbook = openpyxl.load_workbook('2024-25CTEArticulations 3.xlsx')
 sheet = workbook['Sheet1']  # Replace 'Sheet1' with your sheet name
 # sheet = workbook.active # To get the active sheet
 
-input_course_name = input("Enter HS Course Name: ")
-input_course_description = input("Enter a brief course description: ")
 
 data_list = []
 for row in sheet.iter_rows(values_only=True):
@@ -19,7 +17,12 @@ for row in sheet.iter_rows(values_only=True):
 model = SentenceTransformer("all-MiniLM-L6-v2")
 filename = "output.txt"
 f = open(filename, "a")
+input_course_name = input("Enter HS Course Name: ")
+input_course_description = input("Enter a brief course description: ")
 
+instances_list = [] # [course name similarity, course description similarity, course name, course desc]
+course_name_similarities = []
+course_desc_similarities = []
 similar_instances = []
 similar_instance_course_names = []
 num_similar = 0
@@ -52,21 +55,67 @@ for row in data_list[2:50]:
                count[y] = count[y] + 1
                test = test + new_item[y].item()
                averageValue[y] = averageValue[y] + new_item[y].item() 
+    
+    if sentences[2] not in similar_instance_course_names:
+        instances_list.append([similarities[0][5], similarities[6][4], sentences[2], sentences[4]])
+        course_name_similarities.append(similarities[0][5])
+        course_desc_similarities.append(similarities[6][4])
+        similar_instance_course_names.append(sentences[2])
+    
+
             
-    if ((similarities[0][5] >= 0.6) or (similarities[6][4] >= 0.6)):
-        if sentences[2] not in similar_instance_course_names:
-            print("SIMILAR!! ---------")
-            similar_instances.append(similarities)
-            similar_instance_course_names.append(sentences[2])
-            num_similar += 1
-        else:
-            print("Duplicate course (Skipped)")
+    #if ((similarities[0][5] >= 0.6) or (similarities[6][4] >= 0.6)):
+    #    if sentences[2] not in similar_instance_course_names:
+    #        print("SIMILAR!! ---------")
+    #        similar_instances.append(similarities)
+    #        similar_instance_course_names.append(sentences[2])
+    #        num_similar += 1
+    #    else:
+    #        print("Duplicate course (Skipped)")
     
     print("t", test)
     # f.write(similarities)
     # tensor([[1.0000, 0.6660, 0.1046],
     #         [0.6660, 1.0000, 0.1411],
     #         [0.1046, 0.1411, 1.0000]])
+
+most_similar_courses = []
+print("Instances list: ")
+print(instances_list)
+for i in range(0, 3):
+    most_similar_name = max(course_name_similarities)
+    most_similar_desc = max(course_desc_similarities)
+    print("most similar name: ", most_similar_name)
+    print("most similar desc: ", most_similar_desc)
+    instance_index = 0
+    if most_similar_name > most_similar_desc:
+        for j in range(len(instances_list)):
+            print("j: ", j)
+            #print("name instance: ", instances_list[j][0], "  ideal name instance: ", most_similar_name)
+            if (instances_list[j][0] == most_similar_name):
+                most_similar_courses.append(instances_list[j])
+                instance_index = j
+                print("POP")
+                if (instances_list[j][1] == most_similar_desc):
+                    course_desc_similarities.remove(most_similar_desc)
+        instances_list.pop(instance_index)
+        course_name_similarities.remove(most_similar_name)
+
+    else:
+        for j in range(len(instances_list)):
+            print("j: ", j)
+            #print("course desc instance: ", instances_list[j][0], "  ideal course desc instance: ", most_similar_desc)
+            if (instances_list[j][1] == most_similar_desc):
+                most_similar_courses.append(instances_list[j])
+                instance_index = j
+                print("POP")
+                if (instances_list[j][0] == most_similar_name):
+                    course_name_similarities.remove(most_similar_name)
+        instances_list.pop(instance_index)
+        course_desc_similarities.remove(most_similar_desc)
+
+
+
 f.close()
 test 
 # The sentences to encode
@@ -104,13 +153,24 @@ print("Articulation", "High School Classes", "College Courses", "High School Cou
 print("similarities: ", similarities)
 print("--------------------------------------------------------------------------------")
 print("Similar College Courses: ")
-for i in similar_instance_course_names:
-    print(i)
+count = 1
+for i in most_similar_courses:
+    print(f"{count}. ", i[2])
     print()
+    count += 1
 print()
-print("Amount of similar instances: ", num_similar)
-print("Similar Instances: ")
-print(similar_instances)
+user_input = input("Would you like to see course descriptions for these courses? Y/N ")
+print()
+count = 1
+if (user_input == 'y') or (user_input == 'Y'):
+    for i in most_similar_courses:
+        print(f"{count}. ", i[2], ": ", i[3])
+        print()
+        count += 1
+print()
+
+#print("Similar Instances: ")
+#print(similar_instances)
 
 
 #"Articulation", "High School Classes", "College Courses", "High School Course Description", "College Course Description"
