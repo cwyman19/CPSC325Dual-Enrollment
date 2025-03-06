@@ -60,7 +60,7 @@ def get_time():
     test = 0
     count = [0,0,0,0,0]
     averageValue = [0, 0, 0, 0, 0]
-    for row in data_list[2:50]:
+    for row in data_list[2:100]:
       sentences = [
       row[0],
       row[1],
