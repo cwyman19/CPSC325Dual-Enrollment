@@ -88,7 +88,8 @@ def get_time():
     similar_course_descriptions = similar_courses["College Course Description"]
     similar_course_colleges = similar_courses["College"]
     similar_course_numbers = similar_courses["College Course"]
-
+    
+    print(similar_course_numbers.iloc[0])
     
     # instances_list = [] # [course name similarity, course description similarity, course name, course desc]
     # course_name_similarities = []
@@ -193,14 +194,20 @@ def get_time():
     # #   'description2': "Introduces students to the fundamentals of information technology, including computer hardware, software, networks, and basic problem-solving techniques in IT.",
     # #   'name3': " Introduction to Programming SOFT 102",
     # #   'description3': "Introduces students to programming, focusing on basic coding techniques, problem-solving, and the fundamentals of writing and debugging programs.",
-    # #     }
+    # #     } similar_course_numbers
     return {
         'name1': similar_course_names.iloc[0],
-      'description1': similar_course_descriptions.iloc[1],
+      'description1': similar_course_descriptions.iloc[0],
+      'college_course1': similar_course_colleges.iloc[0],
+      'course_number1': similar_course_numbers.iloc[0],
       'name2': similar_course_names.iloc[1],
       'description2': similar_course_descriptions.iloc[1],
+      'college_course2': similar_course_colleges.iloc[1],
+       'course_number2': similar_course_numbers.iloc[1],
       'name3':similar_course_names.iloc[2],
-      'description3': similar_course_descriptions.iloc[1],
+      'description3': similar_course_descriptions.iloc[2],
+      'college_course3': similar_course_colleges.iloc[2],
+       'course_number3': similar_course_numbers.iloc[2],
         }
     
 

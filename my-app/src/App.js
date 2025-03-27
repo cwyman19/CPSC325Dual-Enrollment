@@ -9,16 +9,27 @@ function App() {
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-  
-  
-    
+    const [firstCourse, setFirstCourse] = useState(true);
+    const [secondCourse, setSecondCourse] = useState(true);
+    const [thirdCourse, setThirdCourse] = useState(true);
+    const [firstDescription, setFirstDescription] = useState(false);
+    const [secondDescription, setSecondDescription] = useState(false);
+    const [thirdDescription, setThirdDescription] = useState(false);
+    const [resetButton, setResetButton] = useState(false);
+   
     const [data, setData] = useState({
       name1: "",
       description1: "",
+      course_name1: "",
+      course_number1: "",
       name2: "",
       description2: "",
+      courese_name2: "",
+      course_number2: "",
       name3: "",
       description3: "",
+      courese_name3: "",
+      course_number1: "",
     });
 
     
@@ -61,10 +72,16 @@ function App() {
           setData({
             name1: json.name1,
             description1: json.description1,
+            course_name1: json.college_course1,
+            course_number1: json.college_number1,
             name2: json.name2,
             description2: json.description2,
+            course_name2: json.college_course2,
+            course_number2: json.college_number2,
             name3: json.name3,
             description3: json.description3,
+            course_name3: json.college_course3,
+            course_number3: json.college_number3,
           });
       
     } catch (e) {
@@ -74,14 +91,55 @@ function App() {
       setLoading(false);
     }
   }
-  
 
+  const clickFirstCourse = async () => {
+    setSecondCourse(false);
+    setThirdCourse(false);
+    setSecondDescription(false);
+    setFirstDescription(true);
+    setThirdDescription(false);
+    setResetButton(true);
+  }
+
+  const clickSecondCourse = async () => {
+    setFirstCourse(false);
+    setThirdCourse(false);
+    setSecondDescription(true);
+    setFirstDescription(false);
+    setThirdDescription(false);
+    setResetButton(true);
+  }
+
+  const clickThirdCourse = async () => {
+    setFirstCourse(false);
+    setSecondCourse(false);
+    setSecondDescription(false);
+    setFirstDescription(false);
+    setThirdDescription(true);
+    setResetButton(true);
+  }
+
+  const clickResetButton = async () => {
+    setResetButton(false);
+    setFirstCourse(true);
+    setThirdCourse(true);
+    setSecondCourse(true);
+    setSecondDescription(false);
+    setFirstDescription(false);
+    setThirdDescription(false);
+    
+    
+    
+  }
   return (
     <div class = "App">
       <header className='App-header'>
         <img src={logo} className="logo" alt="logo" />
       </header>
 
+      <div className = "contents">
+        <ul> <li> Home </li> <li>  Similarity Search</li> </ul>
+      </div>
       <div className="expandable-div">
         <div>
           <label htmlFor="fname">High School Course Name:</label>
@@ -99,17 +157,46 @@ function App() {
       </div>
       {isVisible && 
       <div className="expandable-div">
-
-                <h1>Most Similar College Courses</h1>
+              <h2>Most Similar College Courses</h2>
+                {firstCourse &&
+                <div>
                 {/* Calling a data from setdata for showing */}
-                <p> 1: {data.name1}</p>
-                {/* <p> 1st College Description: {data.description1}</p> */}
-                <p> 2: {data.name2}</p>
-                {/* <p> 2nd College Description: {data.description2}</p> */}
-                <p> 3: {data.name3}</p>
-                {/* <p> 3rd College Description: {data.description3}</p> */}
+                <p onClick={clickFirstCourse} className="courseNames">  1: <b>{data.name1}</b></p>
+                {firstDescription &&
+                <div> 
+                 <p className="courseNames"> {data.course_number1} {data.course_name1}</p>
+                <p className="courseNames"> {data.description1}</p>
+                
+                </div>
+                }
+                </div>
+              }
+                {secondCourse &&
+                <div>
+                 <p onClick={clickSecondCourse}  className="courseNames"> 2: <b>{data.name2}</b></p> 
+                 {secondDescription && 
+                 <div>
+                 <p className="courseNames"> {data.course_name2} </p>
+                 <p  className="courseNames"> {data.description2}</p> 
+                 </div>
+                 }
+                 </div>
+                }
+                {thirdCourse &&
+                <div>
+                 <p onClick={clickThirdCourse}  className="courseNames">3: <b>{data.name3}</b> </p>
+                  {thirdDescription && 
+                  <div>
+                    <p className="courseNames"> {data.course_name3} </p>
+                    <p  className="courseNames">  {data.description3}</p> 
+                    </div>
+                  }
+                </div>
+                }
+            {resetButton &&
+            <button  onClick={clickResetButton}>Reset Button</button>
+            }
 
-           
         </div>
       }
     </div>

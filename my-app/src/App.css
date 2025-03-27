@@ -149,4 +149,32 @@ label {
   height: 300px; 
   /* overflow: hidden; */
   transition: max-height 0.5s ease; /* Smooth transition for expanding */
+  
 }
+
+.courseNames {
+  text-align: left;
+}
+
+.contents {
+  margin-top: 2vh;
+  background-color: #582c5e;
+  min-height: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(1px + 2vmin);
+  color: white;
+  
+}
+
+ul {
+  list-style-type: none;
+}
+
+li { 
+  float: left;
+  padding: 5px;
+}
+
