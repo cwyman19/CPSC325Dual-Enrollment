@@ -136,9 +136,8 @@ function App() {
       <header className='App-header'>
         <img src={logo} className="logo" alt="logo" />
       </header>
-
       <div className = "contents">
-        <ul> <li> Home </li> <li>  Similarity Search</li> </ul>
+        <ul> <li> <a href="/" className="home"> home </a> </li> <li>  Similarity Search</li> </ul>
       </div>
       <div className="expandable-div">
         <div>
