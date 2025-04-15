@@ -178,3 +178,11 @@ li {
   padding: 5px;
 }
 
+link {
+  text-decoration: none;
+}
+
+.no-underline {
+  text-decoration: none;
+  color: white; 
+}

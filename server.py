@@ -29,11 +29,13 @@ import pandas as pd
 from flask_cors import CORS
 import faiss
 from flask import Flask, request, jsonify
+import json
 # import openpyxl
 from sentence_transformers import SentenceTransformer
 courses_df = pd.read_csv("output_data/output_course_data.csv")
-
-
+json_string = courses_df.to_json(orient='records')
+# data = json.loads(courses_df)
+print(json_string)
 data_list = []
 #for row in sheet.iter_rows(values_only=True):
 #    data_list.append(list(row))
@@ -210,7 +212,11 @@ def get_time():
        'course_number3': similar_course_numbers.iloc[2],
         }
     
-
+@app.route('/table')
+def get_data():
+#    return data
+    return json_string
+    
     
 
 # Running app
