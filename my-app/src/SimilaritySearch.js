@@ -51,7 +51,7 @@ function SimilaritySearch() {
 
     try {
         // Send data to the backend (POST request)
-        const postResponse = await fetch('http://localhost:5000/data', {
+        const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/data', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

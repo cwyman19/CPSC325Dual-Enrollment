@@ -15,7 +15,7 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/table');
+        const response = await fetch('https://cpscdualenrollmentbackend.onrender.com/table');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
