@@ -1,10 +1,10 @@
 import logo from './image.png';
 import './App.css';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import SimilaritySearch from "./SimilaritySearch";
 import Home from "./Home";
-
+import Student from "./studentView";
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +20,9 @@ function App() {
         <li>
           <Link to="/SimilaritySearch" className="no-underline">Similarity Search</Link>
         </li>
+        <li>
+          <Link to="/student" className="no-underline">Student</Link>
+        </li>
       </ul>
       </div>
     </nav>
@@ -28,6 +31,7 @@ function App() {
     <Routes>
       <Route path="/SimilaritySearch" element={<SimilaritySearch />} />
       <Route path="/" element={<Home />} />
+      <Route path="/student" element={<Student />} />
     </Routes>
   </BrowserRouter>
     

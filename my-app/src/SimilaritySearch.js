@@ -30,7 +30,7 @@ function SimilaritySearch() {
       name3: "",
       description3: "",
       courese_name3: "",
-      course_number1: "",
+      course_number3: "",
     });
 
     
@@ -39,6 +39,15 @@ function SimilaritySearch() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
  
+  const search = async () => {
+    const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(name),
+    });
+  }
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -51,7 +60,7 @@ function SimilaritySearch() {
 
     try {
         // Send data to the backend (POST request)
-        const postResponse = await fetch('http://localhost:5000/data', {
+        const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/data', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -130,12 +139,6 @@ function SimilaritySearch() {
   }
   return (
     <div class = "App">
-      {/* <header className='App-header'>
-        <img src={logo} className="logo" alt="logo" />
-      </header>
-      <div className = "contents">
-        <ul> <li> Home</li> <li>  Similarity Search</li> </ul>
-      </div> */}
       <div className="expandable-div">
         <div>
           <label htmlFor="fname">High School Course Name:</label>
@@ -172,7 +175,7 @@ function SimilaritySearch() {
                  <p onClick={clickSecondCourse}  className="courseNames"> 2: <b>{data.name2}</b></p> 
                  {secondDescription && 
                  <div>
-                 <p className="courseNames"> {data.course_name2} </p>
+                 <p className="courseNames"> {data.course_number2} </p>
                  <p  className="courseNames"> {data.description2}</p> 
                  </div>
                  }
@@ -183,7 +186,7 @@ function SimilaritySearch() {
                  <p onClick={clickThirdCourse}  className="courseNames">3: <b>{data.name3}</b> </p>
                   {thirdDescription && 
                   <div>
-                    <p className="courseNames"> {data.course_name3} </p>
+                    <p className="courseNames"> {data.course_number3} </p>
                     <p  className="courseNames">  {data.description3}</p> 
                     </div>
                   }

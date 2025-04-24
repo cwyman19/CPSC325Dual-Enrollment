@@ -1,17 +1,17 @@
 import './Home.css';
 import React, { useState, useEffect } from 'react';
 
-function Home() {
+function Student() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDescription, setSelectedDescription] = useState(null); // State to store selected description
   const [searchInput, setSelectedInput] = useState(""); 
   const [error, setError] = useState(null);
-    const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://cpscdualenrollmentbackend.onrender.com/table');
+        const response = await fetch('https://cpscdualenrollmentbackend.onrender.com/student');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -79,22 +79,14 @@ function Home() {
 
   return (
     <div className="table-div" >
-  <div className="search-container">
-    <div className="spacer" /> 
-  
-    <div className="filter-wrapper">
-    <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-      <option value="">All</option>
-      <option value="college">College Courses</option>
-      <option value="highschool">HS Courses</option>
-    </select>
+   <div className="search-container">
+  <div className="filter-wrapper">
     <select value={filter} onChange={(e) => setFilter(e.target.value)}>
       <option value="">All</option>
       <option value="college">College Courses</option>
       <option value="highschool">HS Courses</option>
     </select>
   </div>
-  
   <div className="search-box-wrapper">
     <input
       className="searchInput"
@@ -105,8 +97,6 @@ function Home() {
     />
   </div>
 </div>
-  
-
       <table>
         <thead>
           <tr>
@@ -164,6 +154,4 @@ function Home() {
   );
 }
 
-export default Home;
-
-
+export default Student;
