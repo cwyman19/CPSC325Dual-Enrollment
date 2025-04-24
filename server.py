@@ -4,6 +4,7 @@ import pandas as pd
 from flask_cors import CORS
 import faiss
 from flask import Flask, request
+from flask import Flask, request
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
@@ -16,10 +17,12 @@ student_string = df.to_json(orient='records')
 data_list = []
 
 
+
 # Load a pretrained Sentence Transformer model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 filename = "output.txt"
 f = open(filename, "a")
+
 
 
 # Process data
@@ -62,7 +65,10 @@ def get_time():
     similar_course_numbers = similar_courses["College Course"]
         
    
+        
+   
     return {
+      'name1': similar_course_names.iloc[0],
       'name1': similar_course_names.iloc[0],
       'description1': similar_course_descriptions.iloc[0],
       'college_course1': similar_course_colleges.iloc[0],

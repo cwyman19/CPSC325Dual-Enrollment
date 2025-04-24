@@ -129,4 +129,128 @@ while (user_input == "2"):
     if not((yes_no_input == 'Y') or (yes_no_input == 'y')):
         user_input ='5'
 
+# Search by dropdown menus
+# create dropdowns dynamically: 
+# all_unique_high_schools = courses_df['High School'].unique().tolist()
+# all_unique_high_schools.insert(0, "All High Schools")
+# all_unique_colleges = courses_df['College'].unique().tolist()
+# all_unique_colleges.insert(0, "All Colleges")
+# all_unique_college_districts = courses_df['College District'].unique().tolist()
+# all_unique_college_districts.insert(0, "All College Districts")
+# all_unique_career_clusters = courses_df['Career Cluster'].unique().tolist()
+# all_unique_career_clusters.insert(0, "All Career Clusters")
+
+
+# create dropdowns statically:
+all_unique_high_schools = ['All High Schools', 'Mount Vernon High', 'Ferndale', 'Sequoia High School', 'Scriber Lake', 'Oak Harbor', 
+                           'Anacortes', 'Blaine', 'Friday Harbor High School', 'Squalicum', 'Lakewood High School', 'Sedro Woolley', 
+                           'Darrington', 'Marysville Pilchuck High School', 'Sultan High School', 'Coupeville High School', 
+                           'Edmonds High School', 'Heritage High School', 'Snohomish High', 'Lake Stevens High School', 'Lynden High School', 
+                           'Arlington', 'Glacier Peak', 'Nooksack Valley High']
+
+all_unique_college = ['All Colleges', 'Skagit Valley College', 'Everett Community College', 'Bellingham Technical College', 
+                      'Edmonds Community College', 'Whatcom Community College']
+
+all_unique_college_districts = ['All College Districts', 'Skagit Valley', 'Everett', 'Bellingham']
+
+all_unique_career_clusters = ['All Career Clusters', 'STEM', 'Hospitality And Tourism', 'Arts, A/V Technology, and Communications', 'Health Sciences', 'Manufacturing', 'Education And Training', 'Law, Public Safety, Corrections And Security', 'Business, Management, And Administration', 'Finance']
+
+
+# when webpage loads, default should be set to "all" for each dropdown
+high_school_input = "All High Schools"
+college_input = "All Colleges"
+college_district_input = "All College Districts"
+career_cluster_input = "All Career Clusters"
+
+while user_input == "3":
+
+    # collecting user input...
+    current_subset_df = courses_df
+    print()
+    print("1. High School")
+    print("2. College")
+    print("3. College District")
+    print("4. Career Cluster")
+    search_input = input("which attribute would you like to search for? ")
+
+    while (search_input not in ['1','2','3','4']):
+        if (search_input == "High School"):
+            search_input = '1'
+        if (search_input == "College"):
+            search_input = '2'
+        if (search_input == "College District"):
+            search_input = '3'
+        if (search_input == "Career Cluster"):
+            search_input = '4'
+        if (search_input not in ['1','2','3','4']):
+            print("Error: Invalid search attribute")
+            search_input = input("Which attribute would you like to search for? ")
+
+    # assessing user input...
+    if (search_input == "1"):
+        print("---------------------------")
+        print("Here are the available high schools: ")
+        print(all_unique_high_schools)
+        high_school_input = input("Which high school would you like to search for? ")
+        while ((high_school_input not in all_unique_high_schools) and (high_school_input != "All High Schools")):
+            print("Error: not a valid high school")
+            high_school_input = input("Please enter a high school that is in the dataset. ")
+
+    if (search_input == "2"):
+        print("---------------------------")
+        print("Here are the available colleges: ")
+        print(all_unique_colleges)
+        college_input = input("Which college would you like to search for? ")
+        while ((college_input not in all_unique_colleges) and (college_input != "All Colleges")):
+            print("Error: not a valid college")
+            college_input = input("Please enter a college that is in the dataset. ")
+    
+    if (search_input == "3"):
+        print("----------------------------")
+        print("Here are the available college districts: ")
+        print(all_unique_college_districts)
+        college_district_input = input("Which college district would you like to search for? ")
+        while ((college_district_input not in all_unique_college_districts) and (college_district_input != "All College Districts")):
+            print("Error: not a valid college district")
+            college_district_input = input("Please enter a valid college district that is in the dataset. ")
+    
+    if (search_input == "4"):
+        print("-----------------------------")
+        print("Here are the avaliable career clusters: ")
+        print(all_unique_career_clusters)
+        career_cluster_input = input("Which career cluster would you like to search for? ")
+        while ((career_cluster_input not in all_unique_career_clusters) and (career_cluster_input != "All Career Clusters")):
+            print("Error: not a valid career cluster")
+            career_cluster_input = input("Please enter a valid career cluster that is in the dataset. ")
+        
+    # narrowing dataset based on user input...
+    if (high_school_input != "All High Schools"):
+        current_subset_df = courses_df[courses_df['High School'] == high_school_input]
+    
+    if (college_input != "All Colleges"):
+        current_subset_df = current_subset_df[current_subset_df['College'] == college_input]
+    
+    if (college_district_input != "All College Districts"):
+        current_subset_df = current_subset_df[current_subset_df['College District'] == college_district_input]
+    
+    if (career_cluster_input != "All Career Clusters"):
+        current_subset_df = current_subset_df[current_subset_df['Career Cluster'] == career_cluster_input]
+
+    # printing new dataset to the user
+    print()
+    print("==================================================")
+    print("Course Dataset: ")
+    if (len(current_subset_df) == 0):
+        print("No courses available.")
+    else:
+        print(current_subset_df)
+    print()
+
+    # looping
+    yes_no_input = input("Would you like to change your search criteria? (Y/N)")
+    if not((yes_no_input == 'Y') or (yes_no_input == 'y')):
+        user_input = 5
+
+
+
 print("Closing Dataset...")
