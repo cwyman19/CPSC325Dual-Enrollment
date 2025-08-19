@@ -25,11 +25,11 @@ function SimilaritySearch() {
       course_number1: "",
       name2: "",
       description2: "",
-      courese_name2: "",
+      course_name2: "",
       course_number2: "",
       name3: "",
       description3: "",
-      courese_name3: "",
+      course_name3: "",
       course_number3: "",
     });
 
@@ -39,19 +39,11 @@ function SimilaritySearch() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
  
-  const search = async () => {
-    const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(name),
-    });
-  }
+ 
   const fetchData = async () => {
     setLoading(true);
     setError(null);
-    setIsVisible(!isVisible);
+    setIsVisible(false);
 
     const  course = {
       name: name,
@@ -74,22 +66,21 @@ function SimilaritySearch() {
         
 
         const json = await postResponse.json();
-        // setData(json);
           setData({
             name1: json.name1,
             description1: json.description1,
             course_name1: json.college_course1,
-            course_number1: json.college_number1,
+            course_number1: json.course_number1,
             name2: json.name2,
             description2: json.description2,
             course_name2: json.college_course2,
-            course_number2: json.college_number2,
+            course_number2: json.course_number2,
             name3: json.name3,
             description3: json.description3,
             course_name3: json.college_course3,
-            course_number3: json.college_number3,
+            course_number3: json.course_number3,
           });
-      
+        setIsVisible(true); 
     } catch (e) {
       setError(e);
       setData(null);
@@ -135,7 +126,6 @@ function SimilaritySearch() {
     setThirdDescription(false);
     
     
-    
   }
   return (
     <div class = "App">
@@ -163,8 +153,9 @@ function SimilaritySearch() {
                 <p onClick={clickFirstCourse} className="courseNames">  1: <b>{data.name1}</b></p>
                 {firstDescription &&
                 <div> 
-                 <p className="courseNames"> {data.course_number1} {data.course_name1}</p>
-                <p className="courseNames"> {data.description1}</p>
+                <p className="courseNames"> <b> Course Number: </b> {data.course_number1} </p>
+                <p className="courseNames"> <b> College: </b>  {data.course_name1}</p>
+                <p className="courseNames"> <b> Course Description: </b> {data.description1}</p>
                 
                 </div>
                 }
@@ -175,19 +166,21 @@ function SimilaritySearch() {
                  <p onClick={clickSecondCourse}  className="courseNames"> 2: <b>{data.name2}</b></p> 
                  {secondDescription && 
                  <div>
-                 <p className="courseNames"> {data.course_number2} </p>
-                 <p  className="courseNames"> {data.description2}</p> 
+                 <p className="courseNames"> <b> Course Number: </b> {data.course_number2} </p>
+                 <p className="courseNames"> <b> College: </b> {data.course_name2} </p>
+                 <p  className="courseNames"> <b> Course Description: </b> {data.description2}</p> 
                  </div>
                  }
                  </div>
                 }
                 {thirdCourse &&
                 <div>
-                 <p onClick={clickThirdCourse}  className="courseNames">3: <b>{data.name3}</b> </p>
+                 <p onClick={clickThirdCourse}  className="courseNames">3: <b> {data.name3}</b> </p>
                   {thirdDescription && 
                   <div>
-                    <p className="courseNames"> {data.course_number3} </p>
-                    <p  className="courseNames">  {data.description3}</p> 
+                    <p className="courseNames"> <b> Course Number: </b> {data.course_number3} </p>
+                    <p className="courseNames"> <b> College: </b> {data.course_name3} </p>
+                    <p  className="courseNames"> <b> Course Description: </b> {data.description3}</p> 
                     </div>
                   }
                 </div>

@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import SimilaritySearch from "./SimilaritySearch";
 import Home from "./Home";
 import Student from "./studentView";
+import Login from "./login";
+
 function App() {
   return (
     <BrowserRouter>
@@ -18,10 +20,7 @@ function App() {
           <Link to="/" className="no-underline">Home</Link>
         </li>
         <li>
-          <Link to="/SimilaritySearch" className="no-underline">Similarity Search</Link>
-        </li>
-        <li>
-          <Link to="/student" className="no-underline">Student</Link>
+          <Link to="/administrator" className="no-underline">Administrator</Link>
         </li>
       </ul>
       </div>
@@ -29,9 +28,10 @@ function App() {
 
 
     <Routes>
-      <Route path="/SimilaritySearch" element={<SimilaritySearch />} />
-      <Route path="/" element={<Home />} />
-      <Route path="/student" element={<Student />} />
+      <Route path="/CollegeCourseMatcher" element={<SimilaritySearch />} />
+      <Route path="/administrator" element={<Home />} />
+      <Route path="/" element={<Student />} />
+      <Route path="/login" element={<Login  />} />
     </Routes>
   </BrowserRouter>
     

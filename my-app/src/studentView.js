@@ -7,16 +7,29 @@ function Student() {
   const [selectedDescription, setSelectedDescription] = useState(null); // State to store selected description
   const [searchInput, setSelectedInput] = useState(""); 
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState("");
+  const [filter1, setFilter1] = useState("");
+  const [filter2, setFilter2] = useState("");
+  const [filters, setFilters] = useState({ name: '', category: '' });
+  const [hasResults, setHasResults] = useState(true);
+  const [highschoolInput, setHighschoolInput] = useState([]);
+  const [collegeInput, setCollegeInput] = useState([]);
+  // const highschoolInput = ['Mount Vernon High School', 'Ferndale High School', 'Sequoia High School', 'Port Townsend High School', 'Oak Harbor High School', 'Anacortes High School', 'Blaine High School', 'Squalicum High School', 'Friday Harbor High School', 'Sedro-Woolley High School', 'Lakewood High School', 'Coupeville High School', 'Heritage High School', 'Darrington High School', 'Marysville Pilchuck High School', 'Sultan High School', 'Edmonds High School', 'Snohomish High School', 'Lake Stevens High School', 'Lynden High School', 'Arlington High School', 'Glacier Peak High School', 'Nooksack Valley High School'];
+  // const collegeInput = 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('https://cpscdualenrollmentbackend.onrender.com/student');
+        const highSchoolResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/highschoolFilter');
+        const collegeResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/collegeFilter');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const json = await response.json();
+        const highSchooljson = await highSchoolResponse.json();
+        const collegejson = await collegeResponse.json();
         setData(json);
+        setHighschoolInput(highSchooljson);
+        setCollegeInput(collegejson);
         setLoading(false);
       } catch (e) {
         setError(e);
@@ -24,18 +37,15 @@ function Student() {
       }
     };
 
+    
     fetchData();
   }, []);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
-  if (!data || data.length === 0) {
-    return <p>No data to display.</p>;
-  }
 
-  const headers = Object.keys(data[0]);
+  const headers = (Array.isArray(data) && data.length > 0)
+  ? Object.keys(data[0])
+  : [];
 
   const handleDescriptionClick = (description) => {
     setSelectedDescription(description); // Store the clicked description in state
@@ -46,17 +56,16 @@ function Student() {
   }
   const search = async (event) => {
     if (event.keyCode === 13) {
-
-
+        const obj = {filters, searchInput};
         setLoading(true);
         try {
             // Send data to the backend (POST request)
-            const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/search', {
+            const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/studentSearch', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(searchInput),
+            body: JSON.stringify(obj),
         });
   
 
@@ -76,16 +85,74 @@ function Student() {
         }
     }
 }
+const handleFilterChange = async (e) => {
+  const { name, value } = e.target;
 
+  // Update filters object
+  const updatedFilters = { ...filters, [name]: value };
+  setFilters(updatedFilters);
+  
+  // Also update individual filter state
+  if (name === "highschool") setFilter1(value);
+  if (name === "college") setFilter2(value);
+
+  setLoading(true);
+  try {
+    const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/studentfilter', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedFilters),
+    });
+
+    if (!postResponse.ok) {
+      throw new Error(`HTTP error! status: ${postResponse.status}`);
+    }
+
+    const json = await postResponse.json();
+    setData(json);
+    setHasResults(json.length > 0); 
+  } catch (e) {
+    setError(e);
+    setData(null);
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="table-div" >
    <div className="search-container">
   <div className="filter-wrapper">
-    <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-      <option value="">All</option>
-      <option value="college">College Courses</option>
-      <option value="highschool">HS Courses</option>
+ 
+  <div>
+    <select 
+      className="filter" 
+      name="highschool" 
+      value={filter1} 
+      onChange={handleFilterChange}
+    >
+      <option value="">Choose a High School</option>
+      {highschoolInput.map((item, index) => (
+        <option value={item} key={index}>{item}</option>
+      ))}
+      
     </select>
+
+    
+    <select 
+      className="filter" 
+      name="college"
+      value={filter2} 
+      onChange={handleFilterChange}
+    >
+      <option value="">Choose a College</option>
+      {collegeInput.map((item, index) => (
+        <option value={item} key={index}>{item}</option>
+      ))}
+    </select>
+    </div>
+  
   </div>
   <div className="search-box-wrapper">
     <input
@@ -97,6 +164,9 @@ function Student() {
     />
   </div>
 </div>
+{hasResults && (
+  <div>
+{!loading && (
       <table>
         <thead>
           <tr>
@@ -133,8 +203,10 @@ function Student() {
           ))}
         </tbody>
       </table>
-      
-      
+)}
+      {loading && (
+        <p>Loading...</p>
+      )}
       {selectedDescription && (
         <div className="description-modal">
           <div className="modal-content">
@@ -150,8 +222,15 @@ function Student() {
           </div>
         </div>
       )}
+          </div>
+)}
+{!hasResults && (
+  <p>No data to display.</p>
+)}
     </div>
+
   );
+  
 }
 
 export default Student;

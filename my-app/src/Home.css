@@ -164,6 +164,8 @@ table {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  display: flex; 
+  justify-content: space-between;
 }
 
 .search-box-wrapper {
@@ -173,4 +175,16 @@ table {
 .searchInput {
   padding: 8px;
   font-size: 16px;
+}
+
+
+.filter { 
+  padding: 5px;
+  border: 5px solid #582c5e;
+  margin-left: 10px;
+}
+
+.button-container { 
+  position: absolute;
+  left: 0%;
 }
