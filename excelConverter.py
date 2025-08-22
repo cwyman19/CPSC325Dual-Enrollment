@@ -1,3 +1,9 @@
+'''
+This file is used to process data from a Excel file (if necessary)
+
+Not currently used
+'''
+
 import openpyxl
 
 # Load the workbook
