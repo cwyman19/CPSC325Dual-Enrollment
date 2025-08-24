@@ -9,27 +9,46 @@ function Student() {
   const [error, setError] = useState(null);
   const [filter1, setFilter1] = useState("");
   const [filter2, setFilter2] = useState("");
+  const [filter3, setFilter3] = useState("");
+  const [filter4, setFilter4] = useState("");
+  const [filter5, setFilter5] = useState("");
+  const [filter6, setFilter6] = useState("");
   const [filters, setFilters] = useState({ name: '', category: '' });
   const [hasResults, setHasResults] = useState(true);
   const [highschoolInput, setHighschoolInput] = useState([]);
   const [collegeInput, setCollegeInput] = useState([]);
-  // const highschoolInput = ['Mount Vernon High School', 'Ferndale High School', 'Sequoia High School', 'Port Townsend High School', 'Oak Harbor High School', 'Anacortes High School', 'Blaine High School', 'Squalicum High School', 'Friday Harbor High School', 'Sedro-Woolley High School', 'Lakewood High School', 'Coupeville High School', 'Heritage High School', 'Darrington High School', 'Marysville Pilchuck High School', 'Sultan High School', 'Edmonds High School', 'Snohomish High School', 'Lake Stevens High School', 'Lynden High School', 'Arlington High School', 'Glacier Peak High School', 'Nooksack Valley High School'];
-  // const collegeInput = 
+  const [schoolDistrict, setSchoolDistrictInput] = useState([]);
+  const [careerCluster, setCareerClusterInput] = useState([]);
+  const [status, setStatusInput] = useState([]);
+  const [academicYear, setAcademicYearInput] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('https://cpscdualenrollmentbackend.onrender.com/student');
         const highSchoolResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/highschoolFilter');
         const collegeResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/collegeFilter');
+        const schoolDistrictResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/schooldistrictFilter');
+        const careerClusterResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/careerclusterFilter');
+        const academicYearResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/academicyearFilter');
+        const statusResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/statusFilter');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const json = await response.json();
         const highSchooljson = await highSchoolResponse.json();
         const collegejson = await collegeResponse.json();
+        const schoolDistrictjson = await schoolDistrictResponse.json();
+        const careerClusterjson = await careerClusterResponse.json();
+        const academicYearjson = await academicYearResponse.json();
+        const statusjson = await statusResponse.json();
         setData(json);
         setHighschoolInput(highSchooljson);
         setCollegeInput(collegejson);
+        setSchoolDistrictInput(schoolDistrictjson);
+        setCareerClusterInput(careerClusterjson);
+        setAcademicYearInput(academicYearjson);
+        setStatusInput(statusjson);
         setLoading(false);
       } catch (e) {
         setError(e);
@@ -95,6 +114,10 @@ const handleFilterChange = async (e) => {
   // Also update individual filter state
   if (name === "highschool") setFilter1(value);
   if (name === "college") setFilter2(value);
+  if (name === "schooldistrict") setFilter3(value);
+  if (name === "careercluster") setFilter4(value);
+  if (name === "academicyear") setFilter5(value);
+  if (name === "status") setFilter6(value);
 
   setLoading(true);
   try {
@@ -148,6 +171,50 @@ const handleFilterChange = async (e) => {
     >
       <option value="">Choose a College</option>
       {collegeInput.map((item, index) => (
+        <option value={item} key={index}>{item}</option>
+      ))}
+    </select>
+        <select 
+      className="filter" 
+      name="schooldistrict"
+      value={filter3} 
+      onChange={handleFilterChange}
+    >
+      <option value="">Choose a School District</option>
+      {schoolDistrict.map((item, index) => (
+        <option value={item} key={index}>{item}</option>
+      ))}
+    </select>
+    <select 
+      className="filter" 
+      name="careercluster"
+      value={filter4} 
+      onChange={handleFilterChange}
+    >
+      <option value="">Choose a Career Cluster</option>
+      {careerCluster.map((item, index) => (
+        <option value={item} key={index}>{item}</option>
+      ))}
+    </select>
+    <select 
+      className="filter" 
+      name="academicyear"
+      value={filter5} 
+      onChange={handleFilterChange}
+    >
+      <option value="">Choose a Academic Year</option>
+      {academicYear.map((item, index) => (
+        <option value={item} key={index}>{item}</option>
+      ))}
+    </select>
+    <select 
+      className="filter" 
+      name="status"
+      value={filter6} 
+      onChange={handleFilterChange}
+    >
+      <option value="">Choose a Status</option>
+      {status.map((item, index) => (
         <option value={item} key={index}>{item}</option>
       ))}
     </select>
