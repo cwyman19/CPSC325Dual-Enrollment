@@ -1,12 +1,21 @@
+'''
+This file is used to test the backend logic of different features in a terminal setting before deploying it to the front end
+Features tested in this file includes the AI similarity search, general search bar, and filters
+The general search bar testing also uses code found in "search_engine_test.py"
+
+*** Changes in test files are not reflected or accessed by the live running product ***
+'''
+
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 import numpy as np
 import faiss
+from search_engine_test import build_general_indices, general_search
 
 # Load the data
 all_courses_df = pd.read_csv("output_data/output_course_data.csv")
-courses_df = all_courses_df.drop_duplicates(subset=["College Course Name"])
-
+courses_df = all_courses_df.drop_duplicates(subset=["College Course Name"]).reset_index(drop=True)
+#courses_df = all_courses_df
 data_list = []
 #for row in sheet.iter_rows(values_only=True):
 #    data_list.append(list(row))
@@ -15,9 +24,14 @@ data_list = []
 model = SentenceTransformer("all-MiniLM-L6-v2")
 filename = "output.txt"
 f = open(filename, "a")
+
+general_indices = build_general_indices(courses_df, model)
+
+
 print("1. Enter a new high school dual enrollment course")
 print("2. Search for an existing course")
-user_input = input("Select which option you would like to choose (1 or 2)")
+print("3. Search the dataset via drop-down menus")
+user_input = input("Select which option you would like to choose (1, 2, or 3) ")
 while (user_input == "1"):
 
     input_course_name = input("Enter HS Course Name: ")
@@ -87,47 +101,42 @@ while (user_input == "1"):
 
 # search by words
 while (user_input == "2"):
-
     search_input = input("What would you like to search for? ")
 
-    column_indices = {}
-    column_vectors = {}
-    column_texts = {}
+    results = general_search(
+        query=search_input,
+        df=courses_df,
+        model=model,
+        indices=general_indices,
+        top_k_per_col=25,   # tweak if you want faster/slower
+        min_results=10,     # guarantee at least 10 results
+        rel_threshold=0.60, # keep everything over 60% match
+        max_results=None # can cap results if needed
+    )
 
-    for col in courses_df.columns:
-        texts = courses_df[col].astype(str).tolist()
-        embeddings = model.encode(texts, convert_to_numpy=True)
-        
-        index = faiss.IndexFlatL2(embeddings.shape[1])
-        index.add(embeddings)
-
-        column_indices[col] = index
-        column_vectors[col] = embeddings
-        column_texts[col] = texts
-    
-    input_embedding = model.encode([search_input], convert_to_numpy=True)[0]
-
-    # Compare input to each column's FAISS index to find best match
-    column_similarities = {}
-
-    for col, index in column_indices.items():
-        D, I = index.search(np.array([input_embedding]), k=1)  # Top 1 match
-        column_similarities[col] = D[0][0]  # Smaller distance = more similar
-
-    # Get the best matching column
-    best_column = min(column_similarities, key=column_similarities.get)
-    print("Best match column:", best_column)
-
-    # Search the best column for top N similar rows
-    index = column_indices[best_column]
-    D, I = index.search(np.array([input_embedding]), k=20)
-
-    top_rows = courses_df.iloc[I[0]]
-    print(top_rows)
+    if results.empty:
+        print("No matches. Try another term (course name/number, CIP like 11.0901, school, college, etc.).")
+    else:
+        # show the most useful columns succinctly
+        display_cols = [
+            "College", "College Course Name", "College Course",
+            "CIP Code", "HS Course Name", "Career Cluster"
+        ]
+        display_cols = [c for c in display_cols if c in results.columns]
+        print("\nTop matches:\n")
+        for i, (_, row) in enumerate(results[display_cols].reset_index(drop=True).iterrows(), 1):
+            # compact one-liner + course line
+            line1 = f"{i}. {row.get('College','')}: {row.get('College Course Name','')} [{row.get('College Course','')}]"
+            line2 = f"    CIP: {row.get('College Course CIP Code','')} | HS: {row.get('HS Course Name','')} | Cluster: {row.get('Career Cluster','')}"
+            print(line1)
+            print(line2)
+        print()
 
     yes_no_input = input("Would you like to enter a new search term? (Y/N) ")
     if not((yes_no_input == 'Y') or (yes_no_input == 'y')):
-        user_input ='5'
+        user_input = 5
+
+
 
 # Search by dropdown menus
 # create dropdowns dynamically: 
@@ -148,7 +157,7 @@ all_unique_high_schools = ['All High Schools', 'Mount Vernon High', 'Ferndale', 
                            'Edmonds High School', 'Heritage High School', 'Snohomish High', 'Lake Stevens High School', 'Lynden High School', 
                            'Arlington', 'Glacier Peak', 'Nooksack Valley High']
 
-all_unique_college = ['All Colleges', 'Skagit Valley College', 'Everett Community College', 'Bellingham Technical College', 
+all_unique_colleges = ['All Colleges', 'Skagit Valley College', 'Everett Community College', 'Bellingham Technical College', 
                       'Edmonds Community College', 'Whatcom Community College']
 
 all_unique_college_districts = ['All College Districts', 'Skagit Valley', 'Everett', 'Bellingham']
@@ -252,5 +261,32 @@ while user_input == "3":
         user_input = 5
 
 
-
 print("Closing Dataset...")
+
+
+
+
+# To make the search algorithm:
+    # Give the user the choice for which category to search by
+    # User input determines which column to search for, take hs CIP code for example
+    # The user then types in their CIP code, and the FAISS algorithm finds similarity in that column akin to the other algorithm
+
+# thoughts on search algorithm:
+    # iterate through the 2d dataset twice
+    # after first run, create a 1d version
+        # a list of tuples? First value being the similarity value, second value being the row index
+        # use a max() function to order the list by similarity.
+        # isolate the row indeces, create a new version of the dataset that is in the order of the indeces
+
+
+# To make dropdown menu functionality:
+    # Print to the user every option for:
+        # High School
+        # College
+        # College District
+        # Career Cluster
+        # Status (inactive, pending, expired, etc...)
+        # Academic Years
+    
+
+

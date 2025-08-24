@@ -1,3 +1,10 @@
+'''
+This file is used to test the functionality of Sentence Transformers, and the best way to iterate through transformed data
+Some of the logic here is used in the AI Similarity Search
+
+*** Changes in test files are not reflected or accessed by the live running product ***
+'''
+
 from sentence_transformers import SentenceTransformer
 import openpyxl
 

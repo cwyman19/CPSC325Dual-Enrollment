@@ -1,6 +1,11 @@
 '''
 Data Processing for dual enrollment data
 uses pandas dataframe objects
+
+This file tests different ways to remotely manipulate data while it is in a CSV file
+Some of the logic used here could potentially be utilized to give Administrators editor abilities through a front end interface.
+
+*** Changes in test files are not reflected or accessed by the live running product ***
 '''
 
 import pandas as pd

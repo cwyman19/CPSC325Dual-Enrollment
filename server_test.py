@@ -1,3 +1,9 @@
+'''
+This file is used to test for functionality of code used in server.py on the live running dual enrollment backend
+
+*** Changes in test files are not reflected or accessed by the live running product ***
+'''
+
 import os
 from flask import Flask
 import pandas as pd
