@@ -127,7 +127,7 @@ function Home() {
     if (name === "careercluster") setFilter4(value);
     if (name === "academicyear") setFilter5(value);
     if (name === "status") setFilter6(value);
-    if (name === "alphabetical") setFilter7(value);
+    if (name === "adminalphabetical") setFilter7(value);
     setLoading(true);
     try {
       const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/filter', {
@@ -238,7 +238,7 @@ function Home() {
     </select>
     <select 
       className="filter" 
-      name="alphabetical"
+      name="adminalphabetical"
       value={filter7} 
       onChange={handleFilterChange}
     >
