@@ -17,6 +17,7 @@ function SimilaritySearch() {
     const [secondDescription, setSecondDescription] = useState(false);
     const [thirdDescription, setThirdDescription] = useState(false);
     const [resetButton, setResetButton] = useState(false);
+  
    
     const [data, setData] = useState({
       name1: "",
@@ -143,6 +144,9 @@ function SimilaritySearch() {
         <div>
           <button  onClick={fetchData}>Submit</button>
         </div>
+        {loading && (
+        <p>Loading...</p>
+      )}
       </div>
       {isVisible && 
       <div className="expandable-div">

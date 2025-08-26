@@ -15,6 +15,7 @@ function Home() {
   const [filter4, setFilter4] = useState("");
   const [filter5, setFilter5] = useState("");
   const [filter6, setFilter6] = useState("");
+  const [filter7, setFilter7] = useState("");
   const navigate = useNavigate();
   const [filters, setFilters] = useState({ name: '', category: '' });
   const [hasResults, setHasResults] = useState(true);
@@ -24,6 +25,7 @@ function Home() {
   const [careerCluster, setCareerClusterInput] = useState([]);
   const [status, setStatusInput] = useState([]);
   const [academicYear, setAcademicYearInput] = useState([]);
+  const [alphabetical, setAlphabeticalInput] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,6 +36,7 @@ function Home() {
         const careerClusterResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/careerclusterFilter');
         const academicYearResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/academicyearFilter');
         const statusResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/statusFilter');
+        const alphabeticalResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/adminalphabeticalFilter');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -44,6 +47,7 @@ function Home() {
         const careerClusterjson = await careerClusterResponse.json();
         const academicYearjson = await academicYearResponse.json();
         const statusjson = await statusResponse.json();
+        const alphabeticaljson = await alphabeticalResponse.json();
         setData(json);
         setHighschoolInput(highSchooljson);
         setCollegeInput(collegejson);
@@ -51,6 +55,7 @@ function Home() {
         setCareerClusterInput(careerClusterjson);
         setAcademicYearInput(academicYearjson);
         setStatusInput(statusjson);
+        setAlphabeticalInput(alphabeticaljson);
         setLoading(false);
       } catch (e) {
         setError(e);
@@ -122,6 +127,7 @@ function Home() {
     if (name === "careercluster") setFilter4(value);
     if (name === "academicyear") setFilter5(value);
     if (name === "status") setFilter6(value);
+    if (name === "alphabetical") setFilter7(value);
     setLoading(true);
     try {
       const postResponse = await fetch('https://cpscdualenrollmentbackend.onrender.com/filter', {
@@ -230,8 +236,18 @@ function Home() {
         <option value={item} key={index}>{item}</option>
       ))}
     </select>
+    <select 
+      className="filter" 
+      name="alphabetical"
+      value={filter7} 
+      onChange={handleFilterChange}
+    >
+      <option value="">Order By</option>
+      {alphabetical.map((item, index) => (
+        <option value={item} key={index}>{item}</option>
+      ))}
+    </select>
     </div>
-    
   </div>
   
   <div className="search-box-wrapper">
